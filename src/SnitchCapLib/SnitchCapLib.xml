@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SnitchCapLib</name>
+    </assembly>
+    <members>
+        <member name="T:SnitchCapLib.CapSnitchApp">
+            <summary>
+            App capability details
+            </summary>
+        </member>
+        <member name="P:SnitchCapLib.CapSnitchApp.AppName">
+            <summary>
+            Executable path or package name when packaged
+            </summary>
+        </member>
+        <member name="P:SnitchCapLib.CapSnitchApp.CapabilityName">
+            <summary>
+            The accessing capability name
+            </summary>
+        </member>
+        <member name="P:SnitchCapLib.CapSnitchApp.IsPackaged">
+            <summary>
+            If the app is packaged. If it is <see cref="P:SnitchCapLib.CapSnitchApp.AppName"/> will contain AUMID instead of executable path.
+            </summary>
+        </member>
+        <member name="P:SnitchCapLib.CapSnitchApp.IsInUse">
+            <summary>
+            Is the app accessing the capability or not.
+            </summary>
+        </member>
+        <member name="T:SnitchCapLib.CapUsageSnitcher">
+            <summary>
+            Provides a way to get app capability usage.
+            </summary>
+        </member>
+        <member name="M:SnitchCapLib.CapUsageSnitcher.#ctor(System.String)">
+            <summary>
+            Creates an instance of <see cref="T:SnitchCapLib.CapUsageSnitcher"/>.
+            </summary>
+            <param name="capabilityName">A capability name. Currently supported: 'microphone', 'webcam', 'location'.</param>
+        </member>
+        <member name="M:SnitchCapLib.CapUsageSnitcher.StartSnitching">
+            <summary>
+            Start listening to capability usage changes
+            </summary>
+        </member>
+        <member name="M:SnitchCapLib.CapUsageSnitcher.StopSnitching">
+            <summary>
+            Stop listening to capability usage changes
+            </summary>
+        </member>
+        <member name="M:SnitchCapLib.CapUsageSnitcher.SnitchPackages">
+            <summary>
+            Get a list of apps that are accessing or have accessed a capability.
+            </summary>
+            <returns>A list of apps</returns>
+        </member>
+        <member name="T:SnitchCapLib.CapUsageSnitcher.CapUsageChangedEventHandler">
+            <summary>
+            Delegate for <see cref="T:SnitchCapLib.CapUsageSnitcher.CapUsageChangedEventHandler"/>.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="E:SnitchCapLib.CapUsageSnitcher.CapUsageChanged">
+            <summary>
+            Changed Event handler. Raises when an app (or more) have their capability usage changed.
+            </summary>
+        </member>
+        <member name="M:SnitchCapLib.CapUsageSnitcher.Dispose">
+            <summary>
+            Release all resources used by <see cref="T:SnitchCapLib.CapUsageSnitcher"/>.
+            </summary>
+        </member>
+        <member name="T:SnitchCapLib.CapUsageChangedEventArgs">
+            <summary>
+            Changed event for CapUsageChanged.
+            </summary>
+        </member>
+        <member name="P:SnitchCapLib.CapUsageChangedEventArgs.CapUsageChanged">
+            <summary>
+            List of apps that have their capability usage changed since last listen.
+            </summary>
+        </member>
+    </members>
+</doc>

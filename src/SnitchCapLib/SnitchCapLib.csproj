@@ -6,15 +6,11 @@
     <PackageProjectUrl>https://github.com/ADeltaX/SnitchCapLib</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ADeltaX/SnitchCapLib</RepositoryUrl>
     <Version>1.0.0</Version>
-    <Description>
-      A library to watch for capability usage and accesses.
-      Supported capabilities (at the moment of write): microphone, webcam, location
-      
-      Supported Windows 10 versions: 19041+
-    </Description>
-    <PackageReleaseNotes>
-      First release
-    </PackageReleaseNotes>
+    <Description>A library to watch for capability usage and accesses.
+Supported capabilities: microphone, webcam, location
+
+Supported Windows 10 versions: 19041+</Description>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
     <Company>ADeltaX</Company>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors>ADeltaX</Authors>
