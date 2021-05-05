@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SnitchCapLib</name>
+    </assembly>
+    <members>
+        <member name="T:SnitchCapLib.CapSnitchApp">
+            <summary>
+            App capability detail usage
+            </summary>
+        </member>
+        <member name="P:SnitchCapLib.CapSnitchApp.AppName">
+            <summary>
+            Executable path or package name when packaged
+            </summary>
+        </member>
+        <member name="P:SnitchCapLib.CapSnitchApp.CapabilityName">
+            <summary>
+            The accessing capability name
+            </summary>
+        </member>
+        <member name="P:SnitchCapLib.CapSnitchApp.IsPackaged">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

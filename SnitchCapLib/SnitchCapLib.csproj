@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.3;netstandard2.0;net46</TargetFrameworks>
+    <Platforms>AnyCPU;x64;x86;arm64</Platforms>
+    <PackageProjectUrl>https://github.com/ADeltaX/SnitchCapLib</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ADeltaX/SnitchCapLib</RepositoryUrl>
+    <Version>1.0.0</Version>
+    <Description>
+      A library to watch for capability usage and accesses.
+      Supported capabilities (at the moment of write): microphone, webcam, location
+      
+      Supported Windows 10 versions: 19041+
+    </Description>
+    <PackageReleaseNotes>
+      First release
+    </PackageReleaseNotes>
+    <Company>ADeltaX</Company>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Authors>ADeltaX</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>.\SnitchCapLib.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
+    <PackageReference Include="Microsoft.Win32.Registry">
+      <Version>5.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Win32.Registry">
+      <Version>5.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+</Project>

@@ -1,21 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace SnitchCap
+namespace SnitchCapLib
 {
-    public class WnfInterop
+    internal class WnfInterop
     {
-        public static int UpdateWnf(ulong state, byte[] data)
-        {
-            using (var buffer = data.ToBuffer())
-            {
-                ulong state_name = state;
-
-                return ZwUpdateWnfStateData(ref state_name, buffer,
-                    buffer.Length, null, IntPtr.Zero, 0, false);
-            }
-        }
-
         public static WnfStateData QueryWnf(ulong state)
         {
             var data = new WnfStateData();
@@ -35,6 +24,11 @@ namespace SnitchCap
                 }
             }
             return data;
+        }
+
+        public static void UnsubscribeWnf(IntPtr subscription)
+        {
+            RtlUnsubscribeWnfStateChangeNotification(subscription);
         }
 
         public static IntPtr SubscribeWnf(ulong state, WnfUserCallback callback, IntPtr callbackContext, uint changeStamp = 0)
@@ -64,16 +58,13 @@ namespace SnitchCap
             }
         }
 
-        [DllImport("ntdll.dll")]
-        private static extern int ZwUpdateWnfStateData(
-            ref ulong StateId,
-            SafeBuffer DataBuffer,
-            int DataBufferSize,
-            [In, Optional] WnfType TypeId,
-            [Optional] IntPtr Scope,
-            int MatchingChangestamp,
-            [MarshalAs(UnmanagedType.Bool)] bool CheckChangestamp
-        );
+        public delegate IntPtr WnfUserCallback(
+            ulong StateName,
+            uint ChangeStamp,
+            IntPtr TypeId,
+            IntPtr CallbackContext,
+            IntPtr Buffer,
+            uint BufferSize);
 
         [DllImport("ntdll.dll")]
         private static extern int ZwQueryWnfStateData(
@@ -82,10 +73,7 @@ namespace SnitchCap
             [Optional] IntPtr Scope,
             out uint Changestamp,
             SafeBuffer DataBuffer,
-            ref int DataBufferSize
-        );
-
-        public delegate int WnfCallback(ulong StateName, int ChangeStamp, WnfType TypeId, IntPtr CallbackContext, SafeBuffer Buffer, int BufferSize);
+            ref int DataBufferSize);
 
         [DllImport("ntdll.dll")]
         private static extern int RtlSubscribeWnfStateChangeNotification(
@@ -96,30 +84,11 @@ namespace SnitchCap
                                     IntPtr CallbackContext,
                                     IntPtr TypeId,
                                     IntPtr Buffer,
-                                    IntPtr Unknown
-                                    );
+                                    IntPtr Unknown);
 
-        public delegate IntPtr WnfUserCallback(
-            ulong StateName,
-            uint ChangeStamp,
-            IntPtr TypeId,
-            IntPtr CallbackContext,
-            IntPtr Buffer,
-            uint BufferSize);
-
-        public static IntPtr WnfSubscriptionLogHandler(ulong stateName, uint changeStamp, IntPtr typeId, IntPtr callbackContext, IntPtr bufferPtr, uint bufferSize)
-        {
-            Console.WriteLine("[" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff") + "]");
-            Console.WriteLine("State name: 0x{0:X}", stateName);
-            Console.WriteLine("Change stamp: 0x{0:X}", changeStamp);
-            Console.WriteLine("Buffer size: 0x{0:X} \n", bufferSize);
-            byte[] buffer = new byte[bufferSize];
-            Marshal.Copy(bufferPtr, buffer, 0, buffer.Length);
-            if (bufferSize > 0)
-                Console.WriteLine("Buffer content: " + BitConverter.ToString(buffer, 0).Replace('-', ' ') + "\n");
-            return IntPtr.Zero;
-        }
-
+        [DllImport("ntdll.dll")]
+        private static extern int RtlUnsubscribeWnfStateChangeNotification(
+            IntPtr Subscription);
 
         // Original dev: James Forshaw @tyranid: Project Zero
         // Ref: https://github.com/googleprojectzero/sandbox-attacksurface-analysis-tools/blob/46b95cba8f76fae9a5c8258d13057d5edfacdf90/NtApiDotNet/SafeHandles.cs
