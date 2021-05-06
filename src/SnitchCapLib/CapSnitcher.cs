@@ -38,15 +38,12 @@ namespace SnitchCapLib
     {
         [DllImport("combase.dll", CallingConvention = CallingConvention.StdCall)]
         private static extern int RoGetActivationFactory(
-            [MarshalAs(UnmanagedType.HString)] string activatableClassId,
-            [In] ref Guid iid,
-            [Out, MarshalAs(UnmanagedType.IInspectable)] out object factory);
-
-        [DllImport("wincorlib.dll", EntryPoint = "#129", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int GetActivationFactoryByPCWSTR([MarshalAs(UnmanagedType.LPWStr)] string typeName, Guid typeGuid, out IUnknown ppOut);
+            IntPtr activatableClassId,
+            [In] Guid iid,
+            out IUnknown factory);
 
         [DllImport("api-ms-win-core-winrt-string-l1-1-0.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int WindowsCreateStringReference([MarshalAs(UnmanagedType.LPWStr)] string sourceString, int length, out IntPtr header, out IntPtr hString);
+        private static extern int WindowsCreateString([MarshalAs(UnmanagedType.LPWStr)] string sourceString, int length, out IntPtr hString);
 
         [DllImport("api-ms-win-core-winrt-string-l1-1-0.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int WindowsDeleteString(IntPtr hString);
@@ -110,14 +107,22 @@ namespace SnitchCapLib
             Guid guidCapUsageStatics = new Guid("42947746-4ea0-48c2-9274-062ed61f8daa");
             string WinRTClassId = "Windows.Internal.CapabilityAccess.Management.CapabilityUsage";
 
-            // I'm using this variant because .NET 5.0 doesn't support hstring marshalling :)
-            GetActivationFactoryByPCWSTR(WinRTClassId, guidCapUsageStatics, out var fact);
-            statics = (ICapabilityUsageStatics)fact;
-
             // Quick workaround for .NET 5.0 not having hstring marshalling support
             // (I am not willing to include the entire Cs/WinRT library.)
-            WindowsCreateStringReference(capToSnitch, capToSnitch.Length,
-                out _, out var hstring_capToSnitch);
+
+            WindowsCreateString(WinRTClassId, WinRTClassId.Length, out var hstring_WinRTClassId);
+            try
+            {
+                RoGetActivationFactory(hstring_WinRTClassId, guidCapUsageStatics, out var fact);
+                statics = (ICapabilityUsageStatics)fact;
+            }
+            finally
+            {
+                WindowsDeleteString(hstring_WinRTClassId);
+            }
+
+
+            WindowsCreateString(capToSnitch, capToSnitch.Length, out var hstring_capToSnitch);
             try
             {
                 usage = statics.Create(hstring_capToSnitch);
